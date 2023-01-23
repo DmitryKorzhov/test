@@ -33,4 +33,19 @@ if (st.button("Submit")):
         max_tokens = 500,
         temperature = temp
     )
-    st.info(final_response["choices"][0]["text"])
+    final_response = final_response["choices"][0]["text"]
+    while len(final_response) > 12000:
+        # Split the final_response every 12000 characters
+        final_parts = [final_response[i:i+12000] for i in range(0, len(final_response), 12000)]
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            # Use the executor to submit all the requests at the same time
+            future_final_responses = [executor.submit(openai.Completion.create,
+                engine = "text-davinci-003",
+                prompt = part + question_text,
+                max_tokens = 500,
+                temperature = temp) for part in final_parts]
+
+            # wait for all the futures to complete
+            final_responses = [future.result() for future in concurrent.futures.as_completed(future_final_responses)]
+        final_response = "".join([r["choices"][0]["text"] for r in final_responses])
+    st.info(final_response)
