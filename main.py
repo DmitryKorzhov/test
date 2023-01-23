@@ -4,8 +4,7 @@ import streamlit as st
 #set the GPT-3 api key
 openai.api_key = st.secrets['pass']
 
-st.header("Improvado Chat)
-
+st.header("Improvado Chat")
 call_text = st.text_area("Enter your text to process and your question")
 temp = st.slider("temperature", 0.0,1.0,0.5)
 
