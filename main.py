@@ -13,7 +13,7 @@ if (st.button("Submit")):
     response = openai.Completion.create(
         engine = "text-davinci-003",
         prompt = call_text,
-        max_tokens = 2000,
+        max_tokens = 500,
         temperature = temp
     )
 
